@@ -70,35 +70,16 @@ export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
 export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
 export MAKEFLAGS=%{?_smp_mflags}
-python3 -m build --wheel --skip-dependency-check --no-isolation
-pushd ../buildavx2/
-export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 -msse2avx"
-export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 -msse2avx "
-export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
-export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
-python3 -m build --wheel --skip-dependency-check --no-isolation
-
-popd
+python3 -m flit_core.wheel
 
 %install
 export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/pypi-flit_core
 cp %{_builddir}/flit_core-3.7.1/flit_core/vendor/tomli-1.2.3.dist-info/LICENSE %{buildroot}/usr/share/package-licenses/pypi-flit_core/9da6ca26337a886fb3e8d30efd4aeda623dc9ade
-pip install --root=%{buildroot} --no-deps --ignore-installed dist/*.whl
-echo ----[ mark ]----
-cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
-echo ----[ mark ]----
-pushd ../buildavx2/
-export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
-export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
-pip install --root=%{buildroot}-v3 --no-deps --ignore-installed dist/*.whl
-popd
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+mkdir -p  %{buildroot}/usr/lib/python3.11/site-packages
+python bootstrap_install.py  --installdir %{buildroot}/usr/lib/python3.11/site-packages dist/flit_core-3.7.1-py3-none-any.whl
+#pip install --root=%{buildroot} --no-deps --ignore-installed dist/*.whl
 
 %files
 %defattr(-,root,root,-)
