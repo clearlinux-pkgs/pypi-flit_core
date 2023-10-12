@@ -5,7 +5,7 @@
 #
 Name     : pypi-flit_core
 Version  : 3.9.0
-Release  : 26
+Release  : 27
 URL      : https://files.pythonhosted.org/packages/c4/e6/c1ac50fe3eebb38a155155711e6e864e254ce4b6e17fe2429b4c4d5b9e80/flit_core-3.9.0.tar.gz
 Source0  : https://files.pythonhosted.org/packages/c4/e6/c1ac50fe3eebb38a155155711e6e864e254ce4b6e17fe2429b4c4d5b9e80/flit_core-3.9.0.tar.gz
 Summary  : Distribution-building parts of Flit. See flit package for more information
@@ -74,16 +74,7 @@ export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -
 export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 export MAKEFLAGS=%{?_smp_mflags}
-python3 -m build --wheel --skip-dependency-check --no-isolation
-pushd ../buildavx2/
-export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
-export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
-python3 -m build --wheel --skip-dependency-check --no-isolation
-
-popd
+python3 -m flit_core.wheel
 
 %install
 export MAKEFLAGS=%{?_smp_mflags}
@@ -91,19 +82,7 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/pypi-flit_core
 cp %{_builddir}/flit_core-%{version}/LICENSE %{buildroot}/usr/share/package-licenses/pypi-flit_core/12276565e762cd50328b99b71e0343d3d99350a0 || :
 cp %{_builddir}/flit_core-%{version}/flit_core/vendor/tomli-1.2.3.dist-info/LICENSE %{buildroot}/usr/share/package-licenses/pypi-flit_core/9da6ca26337a886fb3e8d30efd4aeda623dc9ade || :
-pip install --root=%{buildroot} --no-deps --ignore-installed dist/*.whl
-echo ----[ mark ]----
-cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
-echo ----[ mark ]----
-pushd ../buildavx2/
-export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
-export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
-pip install --root=%{buildroot}-v3 --no-deps --ignore-installed dist/*.whl
-popd
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+python3 bootstrap_install.py --installdir %{buildroot}/usr/lib/python3.12/site-packages/ dist/flit_core-*.whl
 
 %files
 %defattr(-,root,root,-)
