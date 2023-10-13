@@ -1,0 +1,39 @@
+# https://flit.pypa.io/en/stable/bootstrap.html
+
+- make bump the build
+
+- Swap out the %build section for:
+%build
+python3 -m flit_core.wheel
+
+- Swap out the %install section for (update python site-packages path version):
+%install
+python bootstrap_install.py --installdir %{buildroot}/usr/lib/python3.XX/site-packages/ dist/flit_core-*.whl
+
+- run the build and verify it is happy then push bootstrap build to koji
+
+- Update pypi-installer to use flit_core.wheel to build the wheel similarly
+%build
+python3 -m flit_core.wheel
+
+%install
+cd src
+python3 -m installer --destdir=%{buildroot} ../dist/*.whl
+
+- Update pypi-build to use both
+%build
+python3 -m flit_core.wheel
+
+%install
+cd src
+python3 -m installer --destdir=%{buildroot} dist/*.whl
+
+- Update pypi-pyproject-hooks to use both
+%build
+python3 -m flit_core.wheel
+
+%install
+cd src
+python3 -m installer --destdir=%{buildroot} dist/*.whl
+
+- rebuild the bootstrapped packages with autospec
