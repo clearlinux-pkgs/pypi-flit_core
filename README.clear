@@ -17,8 +17,9 @@ python bootstrap_install.py --installdir %{buildroot}/usr/lib/python3.XX/site-pa
 python3 -m flit_core.wheel
 
 %install
-cd src
+pushd src
 python3 -m installer --destdir=%{buildroot} ../dist/*.whl
+popd
 
 - Update pypi-build to use both
 %build
