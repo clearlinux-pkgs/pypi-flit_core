@@ -6,10 +6,10 @@
 # autospec commit: f35655a
 #
 Name     : pypi-flit_core
-Version  : 3.10.0
-Release  : 33
-URL      : https://files.pythonhosted.org/packages/52/92/89cceb9c49f3e6c72091304636c5ebc2fc48c546742bbf8a6a474e48e666/flit_core-3.10.0.tar.gz
-Source0  : https://files.pythonhosted.org/packages/52/92/89cceb9c49f3e6c72091304636c5ebc2fc48c546742bbf8a6a474e48e666/flit_core-3.10.0.tar.gz
+Version  : 3.10.1
+Release  : 34
+URL      : https://files.pythonhosted.org/packages/d5/ae/09427bea9227a33ec834ed5461432752fd5d02b14f93dd68406c91684622/flit_core-3.10.1.tar.gz
+Source0  : https://files.pythonhosted.org/packages/d5/ae/09427bea9227a33ec834ed5461432752fd5d02b14f93dd68406c91684622/flit_core-3.10.1.tar.gz
 Summary  : Distribution-building parts of Flit. See flit package for more information
 Group    : Development/Tools
 License  : BSD-3-Clause MIT
@@ -56,10 +56,10 @@ python3 components for the pypi-flit_core package.
 
 
 %prep
-%setup -q -n flit_core-3.10.0
-cd %{_builddir}/flit_core-3.10.0
+%setup -q -n flit_core-3.10.1
+cd %{_builddir}/flit_core-3.10.1
 pushd ..
-cp -a flit_core-3.10.0 buildavx2
+cp -a flit_core-3.10.1 buildavx2
 popd
 
 %build
@@ -67,7 +67,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1730417097
+export SOURCE_DATE_EPOCH=1730667165
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
