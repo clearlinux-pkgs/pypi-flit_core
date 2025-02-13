@@ -7,7 +7,7 @@
 #
 Name     : pypi-flit_core
 Version  : 3.10.1
-Release  : 34
+Release  : 35
 URL      : https://files.pythonhosted.org/packages/d5/ae/09427bea9227a33ec834ed5461432752fd5d02b14f93dd68406c91684622/flit_core-3.10.1.tar.gz
 Source0  : https://files.pythonhosted.org/packages/d5/ae/09427bea9227a33ec834ed5461432752fd5d02b14f93dd68406c91684622/flit_core-3.10.1.tar.gz
 Summary  : Distribution-building parts of Flit. See flit package for more information
